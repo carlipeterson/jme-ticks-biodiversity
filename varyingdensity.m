@@ -3,7 +3,7 @@ close all; clear all;
 %% Setup
 
 l = 100;
-% %Full
+%Full
 changing_density = [linspace(0, 100, l);linspace(0, 35, l);linspace(0, 70, l);linspace(0, 100, l); ...
     linspace(0, 70, l);linspace(0, 5, l);linspace(0, 50, l); ...
     linspace(0, 10, l);linspace(0, 1, l);linspace(0, 3, l);linspace(0, 1, l); ...
@@ -15,10 +15,6 @@ base_N = N2;
 
 %Realized reservoir competence
 C = [92.1; 61.2; 55; 51.2; 41.8; 28.9; 14.7; 13.8; 4.6; 2.6; 1.3; 1.3; 1.1; 2; 0];
-
-%Molting percentage
-%M = [41.5; 41; 41.2; 49.6; 46.8; 33.9; 59.3; 33.9; 56.3; 44.1; 36.5; 33.9; 33.9; 29.7; 29.7];
-M = 100*ones(length(C),1);
 
 %Tick preference (#larvae/#hosts)
 b = [73.4; 23.3; 44.5; 84.6; 87.8; 20; 165.4; 96; 1963.3; 73.3; 88; 22; 6; 5; 28.9];
@@ -53,20 +49,20 @@ for k = 1:num_hosts
     % Calculate sums
     for j = 1:num_hosts
         sum_bH = sum_bH + b(j) * N(j,:);
-        sum_bHM = sum_bHM + b(j) * N(j,:) * (M(j)/100);
-        sum_bH2 = sum_bH2 + b(j) * N2(j);  % constant
-        sum_bHM2 = sum_bHM2 + b(j) * N2(j) * (M(j)/100);
+        sum_bHM = sum_bHM + b(j) * N(j,:);
+        sum_bH2 = sum_bH2 + b(j) * N2(j);
+        sum_bHM2 = sum_bHM2 + b(j) * N2(j);
     end
 
     % Compute I and T
     for j = 1:num_hosts
-        I = I + (b(j) * N(j,:) * (M(j)/100) * (C(j)/100)) ./ sum_bHM;
-        T = T + (b(j) * N(j,:) * (M(j)/100) * (C(j)/100)) ./ sum_bH;
-        U = U + (b(j) * N(j,:) * (M(j)/100)) ./ sum_bH;
+        I = I + (b(j) * N(j,:) * (C(j)/100)) ./ sum_bHM;
+        T = T + (b(j) * N(j,:) * (C(j)/100)) ./ sum_bH;
+        U = U + (b(j) * N(j,:)) ./ sum_bH;
         
-        I2 = I2 + (b(j) * N2(j) * (M(j)/100) * (C(j)/100)) ./ sum_bHM2;
-        T2 = T2 + (b(j) * N2(j) * (M(j)/100) * (C(j)/100)) ./ sum_bH2;
-        U2 = U2 + (b(j) * N2(j) * (M(j)/100)) ./ sum_bH2;
+        I2 = I2 + (b(j) * N2(j) * (C(j)/100)) ./ sum_bHM2;
+        T2 = T2 + (b(j) * N2(j) * (C(j)/100)) ./ sum_bH2;
+        U2 = U2 + (b(j) * N2(j)) ./ sum_bH2;
     end
 
     % Compute S, NIP, DIN
@@ -94,11 +90,7 @@ for k = 1:num_hosts
     plot(changing_density(k,:), DUN, 'LineWidth', 2, 'Color', [0.00, 0.45, 0.74])
     hold on
     xline(x_cross, '--k', 'NIP = 50%','LineWidth',1.5)
-    %plot(changing_density(k,:), DUN2.*ones(1,l), '--', 'LineWidth', 2, 'Color', [0.00, 0.45, 0.74])
-    %hold on
     plot(changing_density(k,:), DIN, 'LineWidth', 2, 'Color', [0.85, 0.33, 0.10])
-    %hold on
-    %plot(changing_density(k,:), DIN2.*ones(1,l), '--', 'LineWidth', 2, 'Color', [0.85, 0.33, 0.10])
     ylabel('Nymph density (nymphs/ha)', 'FontSize',13)
     %ylim([4000 15000])
     ax = gca;  

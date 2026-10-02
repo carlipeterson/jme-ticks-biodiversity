@@ -8,10 +8,6 @@ N = [40; 20; 30; 30; 25; 2.1; 6; 1.9; 0.25; 1; 0.2; 1.6; 2; 6.3; 25];
 %Realized reservoir competence
 C = [92.1; 61.2; 55; 51.2; 41.8; 28.9; 14.7; 13.8; 4.6; 2.6; 1.3; 1.3; 1.1; 2; 0];
 
-%Molting percentage
-%M = [41.5; 41; 41.2; 49.6; 46.8; 33.9; 59.3; 33.9; 56.3; 44.1; 36.5; 33.9; 33.9; 29.7; 29.7];
-%M = [100*ones(length(C)-2,1); 50; 50];
-M = 100*ones(length(C),1);
 %Tick preference (#larvae/#hosts)
 b = [73.4; 23.3; 44.5; 84.6; 87.8; 20; 165.4; 96; 1963.3; 73.3; 88; 22; 6; 5; 28.9];
 
@@ -91,21 +87,20 @@ for i = 1:num_combos
     for j = 1:num_hosts
         if hosts(i,j) == 1
             sum_bH(i) = sum_bH(i) + b(j) * N(j);
-            sum_bHM(i) = sum_bHM(i,:) + b(j,:).*N(j,:).*(M(j)/100);
         end
     end
 
     % Compute I
     for j = 1:num_hosts
         if hosts(i,j) == 1
-            I(i) = I(i) + b(j) .* N(j) * (M(j)/100) * (C(j)/100) ./ sum_bHM(i);
+            I(i) = I(i) + b(j) .* N(j) * (C(j)/100) ./ sum_bH(i);
         end
     end
     % Compute Larvae that Become Nymphs after Feeding
     for j = 1:num_hosts
         if hosts(i,j) == 1
-            T(i) = T(i) + b(j)* N(j) * (M(j)/100)*(C(j)/100) ./ sum_bH(i);
-            U(i) = U(i) + b(j)* N(j) * (M(j)/100) ./ sum_bH(i);
+            T(i) = T(i) + b(j)* N(j) * (C(j)/100) ./ sum_bH(i);
+            U(i) = U(i) + b(j)* N(j) ./ sum_bH(i);
         end
     end
 end
